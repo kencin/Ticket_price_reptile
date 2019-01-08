@@ -29,11 +29,11 @@ class ToSingleTicket(object):
             try:
                 cursor.execute(isExit)
                 price = cursor.fetchall()
-                price = price[-1][0]       # 取得最近一次的价格
-                if price is None:   # 不存在则直接插入
+                if len(price) is 0:   # 不存在则直接插入
                     cursor.execute(sql)
                     db.commit()
                 else:
+                    price = price[-1][0]  # 取得最近一次的价格
                     if price != i.get('最低票价(不含机建燃油费)'):  # 存在且价格不同才插入，否则忽略
                         cursor.execute(sql)
                         db.commit()
