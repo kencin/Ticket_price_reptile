@@ -192,7 +192,7 @@ class Control(object):
 
     def get_price(self, from_city, to_city, date):
         if not checkAirInfo.check(from_city, to_city, date):
-            publish.single("monitorLowestPrice", payload="error", hostname=config.HOST,
+            publish.single("theLowestPrice", payload="error", hostname=config.HOST,
                            auth={'username': config.MQTT_USERNAME, 'password': config.MQTT_PASSWORD}, qos=1)
             return
         the_list = getTicket.get_oneDayInfo(from_city, to_city, date)  # 获取这一天机票价格的最低值
@@ -262,3 +262,4 @@ class Control(object):
         p.start()
         q.start()
         client.loop_forever()
+

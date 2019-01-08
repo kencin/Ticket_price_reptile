@@ -36,3 +36,4 @@ def check(from_city, to_city, dep_time, flight=None):
             if flight in i.get('航班'):
                 return True
         return False
+    return True
