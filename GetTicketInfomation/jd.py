@@ -69,7 +69,7 @@ def get_message_jd(from_city, to_city, start_date, proxy=None):
     # print(routeLists)
     try:
         for flight in flights:
-            depTime, arrTime = makeTime(flight['depTime'], flight['depTime'], start_date)
+            depTime, arrTime = makeTime(flight['depTime'], flight['arrTime'], start_date)
             airinfo = getAirInfo.getAirInfo(flight['depCity'], flight['arrCity'], flight['airways'])
             dic = {
                 'depTime': str(depTime),
