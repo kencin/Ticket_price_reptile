@@ -28,18 +28,18 @@ class ToSingleTicket(object):
                      "depTime = '%s' AND flight = '%s'" % (the_table, i.get('出发时间'), i.get('航班'))
             try:
                 cursor.execute(isExit)
-                price = cursor.fetchone()
+                price = cursor.fetchall()
+                price = price[-1][0]       # 取得最近一次的价格
                 if price is None:   # 不存在则直接插入
                     cursor.execute(sql)
                     db.commit()
                 else:
-                    for m in price:     # 存在且价格不同才插入
-                        if m != i.get('最低票价(不含机建燃油费)'):
-                            cursor.execute(sql)
-                            db.commit()
+                    if price != i.get('最低票价(不含机建燃油费)'):  # 存在且价格不同才插入，否则忽略
+                        cursor.execute(sql)
+                        db.commit()
+
             except Exception as e:
-                print("写入携程机票数据库失败！")
-                print(e)
+                print("写入携程机票数据库失败！ 错误原因：" + str(e))
                 db.close()
                 return
         db.close()
