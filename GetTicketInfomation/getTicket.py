@@ -44,14 +44,14 @@ def get_oneDayInfo(from_city, to_city, start_date, the_proxy=get_proxy(), end_da
     the_list = []
     try:
         # 飞猪旅行
-        # for item in gt.fz.get_message_fz(from_city, to_city, start_date, the_proxy):
-        #     the_list.append(item)
+        for item in gt.fz.get_message_fz(from_city, to_city, start_date, the_proxy):
+            the_list.append(item)
         # 携程旅行
         for item in gt.xc.get_message_xc(from_city, to_city, start_date, the_proxy):
             the_list.append(item)
         # 京东旅行
-        # for item in gt.jd.get_message_jd(from_city, to_city, start_date, the_proxy):
-        #     the_list.append(item)
+        for item in gt.jd.get_message_jd(from_city, to_city, start_date, the_proxy):
+            the_list.append(item)
         the_list.sort(key=lambda item: item['最低票价(不含机建燃油费)'])
     except Exception as e:
         print(e)

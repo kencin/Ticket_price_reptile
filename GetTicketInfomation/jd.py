@@ -12,7 +12,7 @@ URL = https://jipiao.jd.com/search/queryFlight.action
 import requests
 from datetime import datetime
 from AirInfo import getAirInfo
-
+from GetTicketInfomation import getTicket
 
 def makeTime(depTime, arrTime, day):
     depHour = str(depTime)[0:2]
@@ -26,6 +26,8 @@ def makeTime(depTime, arrTime, day):
 
 
 def get_message_jd(from_city, to_city, start_date, proxy=None):
+    if len(start_date)>10:
+        start_date = str(start_date)[0:10]
     headers = {
         'Host': "jipiao.jd.com",
         'Accept-Language': "zh-CN,zh;q=0.8,en;q=0.6",
@@ -44,21 +46,24 @@ def get_message_jd(from_city, to_city, start_date, proxy=None):
         'lineType': 'OW',
         'queryType': 'jipiaoindexquery'
     }
-    proxies = {
-        'http': 'http://120.25.149.0:7777',
-    }
+    if str(proxy)[0] == 'b':
+        a = str(proxy).split("'")
+        proxy = {
+            'http': 'http://' + a[1]
+        }
+    else:
+        proxy = {"http": "http://{}".format(proxy)}
     url = 'https://jipiao.jd.com/search/queryFlight.action'
     try:
         times = 4
         response = requests.get(url, params=payload, headers=headers,
-                                proxies={"http": "http://{}".format(proxy)}).json()
+                                proxies=proxy).json()
         while response['data']['flights'] is None and times > 0:
             response = requests.get(url, params=payload, headers=headers,
-                                    proxies={"http": "http://{}".format(proxy)}).json()
+                                    proxies=proxy).json()
             times -= 1
     except Exception as e:
-        print("京东查询失败！")
-        print(e)
+        print("no1. 京东查询失败！ 错误原因：" + str(e))
         return
     flights = response.get('data').get('flights')
     # print(routeLists)
@@ -83,16 +88,15 @@ def get_message_jd(from_city, to_city, start_date, proxy=None):
             }
         print("京东查询成功！")
     except Exception as e:
-        print('京东查询失败！')
-        print(e)
+        print('no2. 京东查询失败！ 错误原因：' + str(e))
 
 
 if __name__ == '__main__':
     from_city = '济南'
     to_city = '长沙'
-    date = '2019-01-17'
+    date = '2019-01-11 00:00:00'
     the_list = []
-    for item in get_message_jd(from_city, to_city, date):
+    for item in get_message_jd(from_city, to_city, date, getTicket.get_proxy()):
         the_list.append(item)
     for item in the_list:
         print(item)

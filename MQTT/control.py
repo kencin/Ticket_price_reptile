@@ -83,9 +83,13 @@ class Control(object):
                     info_list = i
 
             # 如果当前时间大于出发时间，则停止这个监控进程，并设置flag为0
-            if time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) > info_list.get('出发时间'):
-                db.set_flag(the_list[0].get('航班'))
-                return
+            try:
+                if time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) > info_list.get('出发时间'):
+                    db.set_flag(the_list[0].get('航班'))
+                    return
+            except Exception as e:
+                print("监控机票的时间判断出出错！错误原因：" + str(e))
+
 
             try:
                 # 如果机票价格有改变
@@ -253,8 +257,8 @@ class Control(object):
         client.on_message = self.on_message
         client.connect(config.HOST, 1883, 60)
         self.on_start()
-        # p = multiprocessing.Process(target=self.get_xcMonth, args=('济南', '长沙'))     # 监控进程1
-        # q = multiprocessing.Process(target=self.get_xcMonth, args=('长沙', '济南'))     # 监控进程2
-        # p.start()
-        # q.start()
+        p = multiprocessing.Process(target=self.get_xcMonth, args=('济南', '长沙'))     # 监控进程1
+        q = multiprocessing.Process(target=self.get_xcMonth, args=('长沙', '济南'))     # 监控进程2
+        p.start()
+        q.start()
         client.loop_forever()
