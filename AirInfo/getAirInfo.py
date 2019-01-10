@@ -7,7 +7,13 @@ import json
 
 
 def getAirInfo(from_threenumber, to_threenumber, carrierCode):
-
+    from_airport_name = 'Wrong'
+    from_province = 'Wrong'
+    from_area = 'Wrong'
+    to_airport_name = 'Wrong'
+    to_province = 'Wrong'
+    to_area = 'Wrong'
+    cname = 'Wrong'
     with open('./config/airport.json', 'r', encoding="UTF-8") as f:
         file = f.read()
         airports = json.loads(file)
@@ -26,6 +32,7 @@ def getAirInfo(from_threenumber, to_threenumber, carrierCode):
         for airline in airlines['airplaneData']:
             if airline.get('carrierCode') == carrierCode:
                 cname = airline.get('cName')
+
     info = {
         'from_airport_name': from_airport_name,
         'from_province': from_province,

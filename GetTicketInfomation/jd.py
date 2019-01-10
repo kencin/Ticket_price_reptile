@@ -92,8 +92,8 @@ def get_message_jd(from_city, to_city, start_date, proxy=None):
 
 
 if __name__ == '__main__':
-    from_city = '济南'
-    to_city = '长沙'
+    from_city = '北京'
+    to_city = '广州'
     date = '2019-01-11 00:00:00'
     the_list = []
     for item in get_message_jd(from_city, to_city, date, getTicket.get_proxy()):

@@ -76,20 +76,25 @@ def get_message_xc(from_city, to_city, start_date, proxy=None):
     try:
         for routeList in routeLists:
             if routeList.get('routeType') == 'Flight':  # 不包含飞机加火车的路线
+
                 legs = routeList.get('legs')[0]
                 flight = legs['flight']
                 characteristic = legs['characteristic']
-                airinfo = getAirInfo.getAirInfo(flight['departureAirportInfo']['cityTlc'],
-                                                flight['arrivalAirportInfo']['cityTlc'], flight['airlineCode'])
+                airinfo = getAirInfo.getAirInfo(flight['departureAirportInfo']['airportTlc'],
+                                                flight['arrivalAirportInfo']['airportTlc'], flight['airlineCode'])
                 yield {  # 构造生成器
                     '来自': '携程旅行',
-                    '航班': airinfo['cname'] + flight['flightNumber'],  # 航班
+                    '航班': flight['airlineName'] + flight['flightNumber'],  # 航班
+                    '共享航班': flight['sharedFlightName'],  # 共享航班
                     '出发机场': airinfo['from_airport_name'],  # 出发机场
                     '出发地区': airinfo['from_province'] + airinfo['from_area'],
                     '到达机场': airinfo['to_airport_name'],  # 到达机场
                     '到达地区': airinfo['to_province'] + airinfo['to_area'],
                     '出发时间': flight['departureDate'],  # 出发时间
                     '到达时间': flight['arrivalDate'],  # 到达时间
+                    '机型': flight['craftTypeName'],
+                    '种类': flight['craftTypeKindDisplayName'],
+                    '延误率': flight['punctualityRate'],
                     '最低票价(不含机建燃油费)': int(characteristic['lowestPrice'])  # 最低票价
                 }
         print("携程查询成功！")

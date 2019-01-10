@@ -19,9 +19,10 @@ class ToSingleTicket(object):
             now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
             # 插入语句
-            sql = "INSERT INTO %s VALUES ('%s', '%s', %d,'%s', '%s', '%s', '%s', '%s','%s')"% (the_table, i.get('出发时间'),
-                  i.get('到达时间'), i.get('最低票价(不含机建燃油费)'), i.get('航班'), i.get('出发机场'), i.get('出发地区'),
-                  i.get('到达机场'), i.get('到达地区'), now)
+            sql = "INSERT INTO %s VALUES ('%s', '%s', %d,'%s', '%s', '%s', '%s', '%s','%s','%s', '%s', '%s', '%s')"% \
+                  (the_table, i.get('出发时间'),
+                  i.get('到达时间'), i.get('最低票价(不含机建燃油费)'), i.get('航班'), i.get('共享航班'), i.get('出发机场'), i.get('出发地区'),
+                  i.get('到达机场'), i.get('到达地区'), i.get('机型'), i.get('种类'), i.get('延误率'), now)
 
             # 判断是否存在语句
             isExit = "SELECT price FROM %s WHERE  " \

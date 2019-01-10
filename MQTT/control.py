@@ -222,7 +222,7 @@ class Control(object):
     def get_xcMonth(self, from_city, to_city):
         db = toDatabase.ToSingleTicket()
         while True:
-            the_list = getTicket.get_moreDayInfo(from_city, to_city, 5)
+            the_list = getTicket.get_moreDayInfo(from_city, to_city, 60)
             db.to_sql(the_list, 'xcticket')
             time.sleep(3600)    # 休眠一小时
 
@@ -251,15 +251,22 @@ class Control(object):
             i.start()
 
     def connect(self):
+        run_list = []
         client = mqtt.Client(client_id="", clean_session=True, userdata=None, transport="tcp")
         client.username_pw_set(config.MQTT_USERNAME, password=config.MQTT_PASSWORD)
         client.on_connect = self.on_connect
         client.on_message = self.on_message
         client.connect(config.HOST, 1883, 60)
-        self.on_start()
-        p = multiprocessing.Process(target=self.get_xcMonth, args=('济南', '长沙'))     # 监控进程1
-        q = multiprocessing.Process(target=self.get_xcMonth, args=('长沙', '济南'))     # 监控进程2
-        p.start()
-        q.start()
+        # self.on_start()
+        run_list.append(multiprocessing.Process(target=self.get_xcMonth, args=('济南', '长沙')))     # 监控进程1
+        run_list.append(multiprocessing.Process(target=self.get_xcMonth, args=('长沙', '济南')))
+        run_list.append(multiprocessing.Process(target=self.get_xcMonth, args=('上海', '北京')))
+        run_list.append(multiprocessing.Process(target=self.get_xcMonth, args=('北京', '上海')))
+        run_list.append(multiprocessing.Process(target=self.get_xcMonth, args=('北京', '广州')))
+        run_list.append(multiprocessing.Process(target=self.get_xcMonth, args=('杭州', '长沙')))
+        run_list.append(multiprocessing.Process(target=self.get_xcMonth, args=('长沙', '杭州')))
+        run_list.append(multiprocessing.Process(target=self.get_xcMonth, args=('广州', '北京')))
+        for i in run_list:
+            i.start()
         client.loop_forever()
 
